@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
+var validator = require("email-validator");
 const fs = require('fs');
 
+const getTeam = () => {
 inquirer
   .prompt([
     {
@@ -19,36 +21,25 @@ inquirer
         type: 'input',
         name: 'uId',
         message: 'What is the employee\'s ID number?',
-        validate: function (value) {
-            if (isNaN(value) || value==""){
-                return 'Please enter a number';
-            }
-                return true;
-        },
+        // validate: function (value) {
+        //     if (isNaN(value) || value==""){
+        //         return 'Please enter a number';
+        //     }
+        //         return true;
+        // },
     },
     {
         type: 'input',
         name: 'uEmail',
         message: 'What is the employee\'s email?',
         validate: function (value) {
-          var pass = (value !== null && value !== "" && value.includes('@'))
+          var pass = (validator.validate(value))
           if (pass) {
             return true;
           }
             return 'Please enter an email';
         },
       },
-      {
-        type: 'input',
-        name: 'uId',
-        message: 'What is the employee\'s ID number?',
-        validate: function (value) {
-            if (isNaN(value) || value==""){
-                return 'Please enter a number';
-            }
-                return true;
-        },
-    },
     {
         type: 'list',
         message: 'Would you like to add team members?',
@@ -56,9 +47,14 @@ inquirer
         choices: ['Engineer', 'Intern'],
       },
   ])
+
   .then((data) => {
-    console.log(data.uEmail)
-    // fs.writeFile('SAMPLE.md', template.structure(data), (err) =>
-    //   err ? console.log(err) : console.log('Success!')
-    // );
+    if (!data.uId) {
+      console.log("Please enter a number");
+      getTeam(1);
+    } else {
+      console.log(isNaN(data.uId));}
   });
+};
+
+getTeam();
